@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DealBazaar - Sasti Deals</title>
+<style>
+:root{--bg:#f5f3ee;--card:#fff;--ink:#1d2430;--mut:#667085;--line:#e1ddd2;--acc:#0b7a4b;--hi:#ff9f1c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root{--bg:#11171d;--card:#1a232c;--ink:#eef2f5;--mut:#9aa7b4;--line:#2a3743;--acc:#37c98a;--hi:#ffb347}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:14px;max-width:640px;margin-inline:auto}
+h1{font-size:26px;margin:6px 0 0;letter-spacing:-.5px}
+.s{color:var(--mut);margin:2px 0 14px}
+.search{display:flex;gap:8px}
+input{flex:1;min-width:0;padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
+button,a.b{font:inherit;font-weight:700;border:0;border-radius:10px;padding:13px 16px;cursor:pointer;background:var(--acc);color:#fff;text-decoration:none;text-align:center;display:block}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0}
+.chip{white-space:nowrap;background:var(--card);border:1px solid var(--line);color:var(--ink);padding:9px 14px;border-radius:999px;font-weight:600}
+.res{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:6px}
+.res h2{margin:0 0 10px;font-size:18px}
+.stores{display:grid;gap:8px}
+.az{background:#ff9900;color:#111}.fk{background:#2874f0}.ms{background:#9f2089}
+.note{font-size:13px;color:var(--mut);margin-top:18px}
+.empty{color:var(--mut)}
+</style>
+</head>
+<body>
+<h1>DealBazaar</h1>
+<p class="s">Kuch bhi dhundo. Amazon, Flipkart aur Meesho par sabse sasta dekho.</p>
+
+<div class="search">
+<input id="q" placeholder="Jaise: earbuds, saree, mixer grinder" aria-label="Kya dhundna hai">
+<button id="go">Dhundo</button>
+</div>
+<div class="chips" id="chips"></div>
+
+<div class="res" id="res"><span class="empty">Upar kuch likho ya koi category dabao. Fir kis store par dekhna hai wo chuno.</span></div>
+
+<p class="note">Note: In links se kharidne par hume chhota commission milta hai. Aapko koi extra paisa nahi dena padta.</p>
+
+<script>
+// ===== YAHAN APNI ID DAALNI HAI (Amazon/Flipkart se milegi) =====
+var AMAZON_TAG="dealbazaar099-21";
+var FLIPKART_AFFID="";  // Flipkart affiliate id
+// ================================================================
+var CATS=["Earbuds","Smartwatch","Mobile cover","Saree","Mixer grinder","Sneakers","Power bank","Kurta"];
+var res=document.getElementById("res"),q=document.getElementById("q");
+document.getElementById("chips").innerHTML=CATS.map(function(c){return '<button class="chip" data-c="'+c+'">'+c+'</button>'}).join("");
+function e(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function show(t){
+  t=t.trim();if(!t){q.focus();return}
+  var k=encodeURIComponent(t);
+  var az="https://www.amazon.in/s?k="+k+(AMAZON_TAG?"&tag="+encodeURIComponent(AMAZON_TAG):"");
+  var fk="https://www.flipkart.com/search?q="+k+(FLIPKART_AFFID?"&affid="+encodeURIComponent(FLIPKART_AFFID):"");
+  var ms="https://www.meesho.com/search?q="+k;
+  res.innerHTML='<h2>'+e(t)+'</h2><div class="stores">'+
+  '<a class="b az" target="_blank" rel="noopener sponsored" href="'+az+'">Amazon par dekho</a>'+
+  '<a class="b fk" target="_blank" rel="noopener sponsored" href="'+fk+'">Flipkart par dekho</a>'+
+  '<a class="b ms" target="_blank" rel="noopener sponsored" href="'+ms+'">Meesho par dekho</a></div>';
+}
+document.getElementById("go").onclick=function(){show(q.value)};
+q.addEventListener("keydown",function(ev){if(ev.key==="Enter")show(q.value)});
+document.getElementById("chips").onclick=function(ev){var c=ev.target.getAttribute("data-c");if(c){q.value=c;show(c)}};
+</script>
+</body>
+</html>
